@@ -1,0 +1,54 @@
+
+section {
+    background-image: linear-gradient(#e52d27, #b31217);
+
+    .card-body {
+        padding: 1rem !important;
+    
+        form {
+            padding-left: 2.6525rem;
+        
+            .logo {
+                max-width: 100px;
+            }
+            
+            .form-control {
+                font-size: 16px;
+                font-weight: 400;
+                width: 20rem;
+
+                .text-danger {
+                    color: #dc3545;
+                    font-size: 0.875rem;
+                    margin-top: 5px;
+                  }                  
+            }
+            
+            .btn-login {
+                background-color: #ED1A23;
+                color: #fff;
+                font-weight: 500;
+                font-size: 15px;
+            }
+    
+            .btn-forgotPassword {
+                border: none;
+                color: #393f81;
+                background-color: transparent;
+                text-decoration: underline;
+            }
+            
+            .btn-signup {
+                border: none;
+                color: #393f81;
+                background-color: transparent;
+                text-decoration: underline;
+            }
+    
+            .btn-signup:hover,
+            .btn-forgotPassword:hover {
+                color: highlight;
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+section {
+    background-image: linear-gradient(#e52d27, #b31217);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+
+    .card-body {
+        padding: 1rem !important;
+
+        form {
+            padding-left: 2.6525rem;
+
+            .mat-form-field {
+                width: 20rem;
+                
+                .mat-input-element {
+                    font-size: 16px;
+                }
+            }
+
+            .btn-signup {
+                background-color: #ED1A23;
+                color: #fff;
+                font-weight: 500;
+                font-size: 20px;
+                &:hover {
+                    background-color: darken(#ED1A23, 10%);
+                }
+            }
+        }
+    }
+}

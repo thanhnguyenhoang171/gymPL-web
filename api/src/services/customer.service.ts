@@ -124,6 +124,14 @@ export const put = async (req: Request, res: Response): Promise<any> => {
             return res.status(400).json({ message: "Customer UID is required." });
         }
 
+        let imageURL = '' as string;
+        if (!req.files || Object.keys(req.files).length === 0) {
+            //do nothing
+        }
+        else {
+            let result = await uploadFileService(req.files.Image);
+            imageURL = String(result.path);
+        }
         const {
             CustomerName,
             Gender,
@@ -156,7 +164,8 @@ export const put = async (req: Request, res: Response): Promise<any> => {
                     StaffID = :StaffID,
                     Startdate = GETDATE(),
                     Note = :Note,
-                    Date_Modified = GETDATE()
+                    Date_Modified = GETDATE(),
+                    Image = :imageURL
                 WHERE CustomerID = :CustomerID`,
             {
                 replacements: {
@@ -167,7 +176,8 @@ export const put = async (req: Request, res: Response): Promise<any> => {
                     PackID,
                     StaffID,
                     Note,
-                    CustomerID: id
+                    CustomerID: id,
+                    imageURL
                 },
                 type: QueryTypes.UPDATE
             }
@@ -260,10 +270,18 @@ export const uploadfile = async (req: any, res: any) => {
         } else {
             const result = await uploadFileService(req.files.Image);
             console.log(">>> Check Result = ", result);
-            return res.status(200).json({
-                message: "File uploaded successfully.",
-                path: result.path
-            });
+            if (result.status === 'success') {
+                return res.status(200).json({
+                    message: "File uploaded successfully.",
+                    path: result.path
+                });
+            } else {
+                return res.status(500).json({
+                    message: "Error uploading file",
+                    result: result
+                })
+            }
+          
         }
     } catch (error) {
         console.log(">>> error upload file = ", error);

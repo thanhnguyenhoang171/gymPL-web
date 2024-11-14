@@ -1,17 +1,20 @@
 import path from 'path';
 
 const uploadFileService = async (fileObject: any) => {
-    let uploadPath = path.resolve(process.cwd(), '../../../src/assets/fileUpload');
+    let uploadPath = path.resolve(process.cwd() + '/src/public/uploadFile');
     let extName = path.extname(fileObject.name);
     let baseName = path.basename(fileObject.name, extName);
 
     let finalName = `${baseName}-${Date.now()}${extName}`;
     let finalPath = `${uploadPath}/${finalName}`;
+
+    let imageURL = 'http://localhost:8080/uploadFile/' + finalName;
+
     try {
         await fileObject.mv(finalPath);
         return ({
             status: 'success',
-            path: finalPath,
+            path: imageURL,
             error: null,
             message: 'Upload file successfully!'
         })
@@ -23,7 +26,9 @@ const uploadFileService = async (fileObject: any) => {
             error: JSON.stringify(error),
             message: "Upload file fail!"
         })
-    } 
+    }
 }
+
+
 
 export default uploadFileService;

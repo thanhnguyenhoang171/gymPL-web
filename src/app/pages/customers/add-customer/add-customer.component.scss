@@ -1,0 +1,35 @@
+.stepper {
+    margin-top: 16px;
+    border-radius: 10px;
+
+    form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+    
+        .container {
+            margin-left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-left: 0;
+        
+            .mat-mdc-card {
+                width: 30rem;
+            }
+            .mat-mdc-form-field {
+                margin-top: 16px;
+                display: flex;
+                flex-direction: column;
+                width: 28rem;
+            }
+            
+            button {
+                margin: 16px 5px 5px 10px;
+            }
+        } 
+    }
+}

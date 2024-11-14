@@ -1,0 +1,5 @@
+{
+  "watch": ["routes", "fileUpload"],
+  "ext": "js,jpg",
+  "delay": "500"
+}

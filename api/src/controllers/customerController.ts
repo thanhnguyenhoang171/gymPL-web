@@ -67,9 +67,9 @@ export const deleteCustomer = async (req: Request, res: Response): Promise<any> 
         await customerService.remove(req, res);
     } catch (error) {
         console.error("Error deleting customer:", error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             message: "Error deleting customer",
-            error: (error as Error).message 
+            error: (error as Error).message
         });
     }
 };
@@ -82,7 +82,14 @@ export const uploadFileCustomer = async (req: any, res: any): Promise<any> => {
         res.status(500).json({ message: "Error uploading file" });
     }
 }
-
+export const getFileCustomer = async (req: any, res: any): Promise<any> => {
+    try {
+        await customerService.uploadfile(req, res);
+    } catch (error) {
+        console.error("Error uploading file: ", error);
+        res.status(500).json({ message: "Error uploading file" });
+    }
+}
 export const customerController = {
     getAllCustomers,
     getCustomerById,

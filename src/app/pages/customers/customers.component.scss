@@ -1,0 +1,118 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: .5rem;
+    background-color: #fff;
+    margin: 1.25rem 0 1.25rem 0;
+    box-shadow: 0 .25rem .5rem #e6edef;
+    gap: 20px;
+    max-width: 100%;
+
+    .card-container {
+
+        .card {
+            max-width: 400px;
+            border-radius: 15px;
+
+            .header-image {
+                background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+                background-size: cover;
+            }
+        }
+
+        ul {
+            padding-top: 10px;
+            padding-left: 1rem;
+
+            li {
+                list-style: none;
+                font-size: 13.5625px;
+                padding-top: 5.5625px;
+
+                .mat-icon {
+                    margin-right: 10px;
+                    display: table-cell;
+                    float: left;
+                }
+            }
+    
+            p {
+                padding-top: 5px;
+                font-size: 20px;
+                margin-bottom: 10px;
+                font-weight: 500;
+            }
+        }
+        
+        button {
+            color: black;
+            font-weight: 600;
+            margin: 5px 0 10px 15px;
+        }
+
+        button:hover {
+            color: whitesmoke;
+        }
+    }
+
+    .table-container {
+        width: 100%;
+
+        .mat-mdc-form-field {
+            font-size: 14px;
+            width: 300px;
+        }
+
+        .button-row {
+            display: table-cell;
+            max-width: 600px;
+            float: right;
+
+            .flex-container {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+    
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    width: auto;
+        
+                    .mat-mdc-button-base {
+                        background-color: green;
+                        margin: 8px 8px 8px 0;
+                        border-radius: 5px;
+                    }
+                }
+            }
+        }
+
+        .mat-elevation-z8 {
+            width: 100%;
+
+            table {
+                width: 100%;
+
+                .mat-mdc-row {
+                    cursor: pointer;
+                }
+    
+                .mat-mdc-row:hover {
+                    background-color: #EAECEC;
+                    font-weight: 500;
+                }
+
+                td, th {
+                    width: 10%;
+
+                    .btn {
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+  

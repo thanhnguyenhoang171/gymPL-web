@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from "express";
+import path from 'path';
 import cors from "cors";
 import customerRoutes from "./routes/customer.routes";
 import packageRoutes from "./routes/package.routes";
@@ -9,7 +10,7 @@ import accountRoutes from "./routes/account.routes";
 import authRoutes from "./routes/auth.routes";
 import protectedRoutes from "./routes/protected.routes";
 import DbConnect from "./data/db_sqlserver_connection";
-
+import fileUpload from 'express-fileupload'
 
 const app = express();
 const PORT = process.env['PORT'] || 8080;
@@ -19,6 +20,16 @@ var corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 };
+
+// Lấy đường dẫn đến thư mục chứa ảnh
+// Lấy đường dẫn tới thư mục 'uploadFile' trong 'public'
+const publicFolderPath = path.resolve(process.cwd(), 'src', 'public', 'uploadFile');
+
+// Đảm bảo thư mục 'public/uploadFile' có thể được truy cập từ frontend
+app.use('/uploadFile', express.static(publicFolderPath));
+
+// config file upload
+app.use(fileUpload());
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -40,4 +51,3 @@ app.listen(PORT, () => {
 app.get("/hello", (req, res) => {
     res.json({ message: "Welcome to GymPhuongLuu Web" });
 });
-

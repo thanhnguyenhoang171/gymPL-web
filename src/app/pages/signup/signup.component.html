@@ -1,0 +1,120 @@
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Đăng ký tài khoản</p>
+
+                                <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="mx-1 mx-md-4">
+
+                                    <!-- Full Name Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" appearance="outline">
+                                            <mat-label>Họ và tên</mat-label>
+                                            <input matInput formControlName="fullName" placeholder="Nhập họ và tên" required>
+                                            <mat-error *ngIf="customerForm.get('fullName')?.hasError('required')">
+                                                Vui lòng nhập họ và tên
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Username Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-user-circle fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" appearance="outline">
+                                            <mat-label>Tên đăng nhập</mat-label>
+                                            <input matInput placeholder="Nhập tên đăng nhập" formControlName="username" required>
+                                            <mat-error *ngIf="customerForm.get('username')?.hasError('required')">
+                                                Vui lòng nhập tên đăng nhập
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Email Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" appearance="outline">
+                                            <mat-label>Địa chỉ Email</mat-label>
+                                            <input matInput type="text" placeholder="Nhập địa chỉ Email" formControlName="email">
+                                            <!-- Error for invalid email format -->
+                                            <mat-error *ngIf="customerForm.get('email')?.hasError('email')">
+                                                Định dạng email không đúng
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Phone Number Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" appearance="outline">
+                                            <mat-label>Số điện thoại</mat-label>
+                                            <input matInput type="text" placeholder="Số điện thoại" formControlName="phoneNumber" required>
+                                            <mat-error *ngIf="customerForm.get('phoneNumber')?.hasError('required')">
+                                                Vui lòng nhập số điện thoại
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Password Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" hintLabel="Tối đa 50 ký tự" appearance="outline">
+                                            <mat-label>Mật khẩu</mat-label>
+                                            <input matInput #input maxlength="50"
+                                                type="password" 
+                                                placeholder="Nhập mật khẩu" 
+                                                formControlName="password" 
+                                                required
+                                                (input)="onInput($event)"
+                                            >
+                                            <mat-hint align="end">{{value().length}}/50</mat-hint>
+                                            <mat-error *ngIf="customerForm.get('password')?.hasError('required')">
+                                                Vui lòng nhập mật khẩu
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Confirm Password Field -->
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                        <mat-form-field class="form-outline flex-fill mb-0" appearance="outline">
+                                            <mat-label>Xác nhận mật khẩu</mat-label>
+                                            <input matInput #input maxlength="50"
+                                                type="password" 
+                                                placeholder="Xác nhận mật khẩu" 
+                                                formControlName="confirmPassword" 
+                                                required
+                                            >
+                                            <mat-error *ngIf="customerForm.get('confirmPassword')?.hasError('required')">
+                                                Vui lòng xác nhận mật khẩu
+                                            </mat-error>
+                                            <mat-error *ngIf="customerForm.hasError('notMatch') && customerForm.get('confirmPassword')?.touched">
+                                                Mật khẩu không khớp
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button type="submit" mat-raised-button color="primary" class="btn btn-lg btn-signup">Đăng ký</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                                <img src="../../../assets/image/LogoGymPL.png"
+                                    class="img-fluid" alt="logo-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
