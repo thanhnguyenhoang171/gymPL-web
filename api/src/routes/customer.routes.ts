@@ -12,6 +12,5 @@ router.put('/update', customerController.updateCustomer);
 router.delete('/delete', customerController.deleteCustomer);
 
 router.post('/uploadfile', customerController.uploadFileCustomer);
-router.get('/uploadfile:id', customerController.uploadFileCustomer);
 
 export default router;

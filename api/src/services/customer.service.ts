@@ -12,6 +12,7 @@ interface CustomerData {
     PackID: number;
     StaffID?: number | null;
     Note?: string | null;
+    Image?: string | null;
 }
 
 interface ChangedFields {
@@ -85,7 +86,7 @@ export const post = async (req: Request, res: Response): Promise<any> => {
             PackID,
             StaffID,
             Note
-        };  
+        };
 
         await db.sequelize.query(
             `INSERT INTO Customers (CustomerName, Gender, DateofBirth, PhoneNumber, PackID, StaffID, Note)
@@ -207,7 +208,7 @@ export const put = async (req: Request, res: Response): Promise<any> => {
                     changedFields[key] = updatedCustomer[0][key as keyof CustomerData];
                 }
             }
-            
+
             // Format DateofBirth to "yyyy-MM-dd" if it exists in the changed fields
             if ('DateofBirth' in changedFields && changedFields.DateofBirth) {
                 changedFields.DateofBirth = new Date(changedFields.DateofBirth as string).toISOString().split("T")[0];
@@ -256,9 +257,9 @@ export const remove = async (req: Request, res: Response): Promise<any> => {
         });
     } catch (error) {
         console.error("Error deleting customer:", error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             message: "Error deleting customer",
-            error: (error as Error).message 
+            error: (error as Error).message
         });
     }
 };
@@ -281,7 +282,7 @@ export const uploadfile = async (req: any, res: any) => {
                     result: result
                 })
             }
-          
+
         }
     } catch (error) {
         console.log(">>> error upload file = ", error);

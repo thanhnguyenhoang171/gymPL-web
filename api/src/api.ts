@@ -4,6 +4,7 @@ dotenv.config();
 import express from "express";
 import path from 'path';
 import cors from "cors";
+import productRoutes from "./routes/product.routes";
 import customerRoutes from "./routes/customer.routes";
 import packageRoutes from "./routes/package.routes";
 import accountRoutes from "./routes/account.routes";
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API base path to customers
+app.use("/api/product", productRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/package", packageRoutes);
 app.use("/api/account", accountRoutes);

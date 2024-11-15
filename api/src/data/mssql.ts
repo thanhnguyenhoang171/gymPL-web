@@ -24,6 +24,7 @@ interface DbInterface {
     Customers?: any;
     Packages?: any;
     Accounts?: any;
+    Products?: any;
 }
 
 const db: DbInterface = {
@@ -38,10 +39,12 @@ db.sequelize = sequelize;
 import customerModel from "../models/customer.model";
 import packageModel from "../models/package.model";
 import accountModel from "../models/account.model";
+import productModel from "../models/product.model";
 
 // Initialize models
 db.Customers = customerModel(sequelize);
 db.Packages = packageModel(sequelize); 
 db.Accounts = accountModel(sequelize);
+db.Products = productModel(sequelize);
 
 export default db;
