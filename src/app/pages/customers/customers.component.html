@@ -6,16 +6,15 @@
         <mat-card-title>Customer Details</mat-card-title>
         <mat-card-subtitle>Membership Information</mat-card-subtitle>
       </mat-card-header>
-     
 
-      <img
-        *ngIf="selectedCustomer?.Image"
-        mat-card-image
-        [src]="selectedCustomer?.Image"
-        alt="Customer Image"
-        style="width: 200px; height: 250px"
-      />
-      <mat-card-content>
+      <mat-card-content class="card-content">
+        <img
+          *ngIf="selectedCustomer?.Image"
+          mat-card-image
+          [src]="selectedCustomer?.Image"
+          alt="Customer Image"
+          style="width: 200px; height: 200px"
+        />
         <!-- <ul>
               <li>Customer ID</li>
                   <p>{{ selectedCustomer?.CustomerID || '' }}</p>

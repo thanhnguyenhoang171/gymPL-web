@@ -75,7 +75,7 @@ export class CustomersComponent implements AfterViewInit, OnInit {
 
   onRowClick(row: Customer) {
     this.selectedCustomer = row;
-    this.customerKeys = Object.keys(row) as (keyof Customer)[];
+    this.customerKeys = Object.keys(row).filter(key => key !== 'Image') as (keyof Customer)[];
   }
 
   applyFilter(event: Event) {

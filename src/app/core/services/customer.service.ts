@@ -34,7 +34,7 @@ export class CustomerService {
                     PhoneNumber: customer.PhoneNumber,
                     DateofBirth: customer.DateofBirth ? new Date(customer.DateofBirth) : null,
                     PackID: customer.PackID,
-                    Image: customer.Image ? this.getImagePath(customer.Image) : 'https://material.angular.io/assets/img/examples/shiba2.jpg', // Chuyển đổi đường dẫn hình ảnh
+                    Image: customer.Image ? this.getImagePath(customer.Image) : '../../../assets/logo/387807896_664506269107075_8224171808058164020_n.jpg', // Chuyển đổi đường dẫn hình ảnh
                 }));
             }),
             retry(3), // Retry up to 3 times
