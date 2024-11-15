@@ -1,6 +1,7 @@
 import { QueryTypes } from 'sequelize';
 import db from '../data/mssql';
 import { Request, Response } from 'express';
+import productController from '../controllers/productController';
 
 // // Define interfaces for your data structure
 // interface ProductData {
@@ -35,8 +36,7 @@ export const get = async (req: Request, res: Response) => {
 export const getDetails = async (req: Request, res: Response) => {
     try {
         const product = await db.Products.findByPk(req.query.id as string);
-        if (product)
-        {
+        if (product) {
             res.status(200).json(product);
         }
         else {
@@ -99,9 +99,42 @@ export const post = async (req: Request, res: Response): Promise<any> => {
         });
     }
 }
+export const remove = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const id = req.query.id as string;
+
+        //Check blank id!
+        if (!id) {
+            return res.status(400).json({
+                message: "ProductID is required."
+            });
+        }
+        // Check product exist
+        const product = await db.Products.findOne({ where: { ProductID: id } });
+        if (!product) {
+            return res.status(404).json({
+                message: "Product not found!"
+            });
+        }
+        const result = await db.Products.destroy({ where: { ProductID: id } });
+        return res.status(200).json({
+            message: "Product deleted successfully.",
+            data: {
+                ProductID: id,
+                ProductName: product.ProductName
+            }
+        });
+    } catch (error) {
+        console.error("Error deleting product: ", error);
+        return res.status(500).json({
+            message: "Error deleting customer",
+            error: (error as Error).message
+        })
+    }
+}
 
 export const productService = {
-    get, post, getDetails
+    get, post, getDetails, remove
 }
 
 export default productService;

@@ -36,8 +36,20 @@ export const postProduct = async (req: Request, res: Response): Promise<any> => 
     }
 }
 
+export const deleteProduct = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const result = await productService.remove(req, res);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error deleting product",
+            error: (error as Error).message
+        });
+    }
+
+}
+
 export const productController = {
-    getAllProducts, postProduct, getProductById
+    getAllProducts, postProduct, getProductById, deleteProduct
 }
 
 export default productController;
