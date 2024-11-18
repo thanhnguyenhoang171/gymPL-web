@@ -7,7 +7,7 @@ import productController from "../controllers/productController";
 router.get('/all', productController.getAllProducts);
 router.get('/detail', productController.getProductById);
 router.post('/add', productController.postProduct);
-// router.put('/update', packageController.updatePackage);
+router.put('/update', productController.updateProduct);
 router.delete('/delete', productController.deleteProduct);
 
 export default router;

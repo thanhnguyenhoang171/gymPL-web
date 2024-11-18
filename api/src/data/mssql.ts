@@ -19,6 +19,7 @@ const sequelize = new Sequelize(
 );
 
 interface DbInterface {
+    Categories?: any;
     Sequelize: typeof Sequelize;
     sequelize: Sequelize;
     Customers?: any;
@@ -40,11 +41,13 @@ import customerModel from "../models/customer.model";
 import packageModel from "../models/package.model";
 import accountModel from "../models/account.model";
 import productModel from "../models/product.model";
+import categoryModel from "../models/category.model"
 
 // Initialize models
 db.Customers = customerModel(sequelize);
 db.Packages = packageModel(sequelize); 
 db.Accounts = accountModel(sequelize);
 db.Products = productModel(sequelize);
+db.Categories = categoryModel(sequelize);
 
 export default db;

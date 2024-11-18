@@ -46,10 +46,21 @@ export const deleteProduct = async (req: Request, res: Response): Promise<any> =
         });
     }
 
+} 
+
+export const updateProduct = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await productService.update(req, res);
+    } catch (error) {
+        console.error("Error updating product: ", error);
+        res.status(500).json({
+            message: "Error updating customer"
+        });
+    }
 }
 
 export const productController = {
-    getAllProducts, postProduct, getProductById, deleteProduct
+    getAllProducts, postProduct, getProductById, deleteProduct, updateProduct
 }
 
 export default productController;

@@ -2,21 +2,22 @@ import { QueryTypes } from 'sequelize';
 import db from '../data/mssql';
 import { Request, Response } from 'express';
 import productController from '../controllers/productController';
+import { promises } from 'dns';
 
-// // Define interfaces for your data structure
-// interface ProductData {
-//     CategoryID: number;
-//     ProductName: string;
-//     Description: string | null;
-//     SupplierID: number | null;
-//     Quantity: number | null;
-//     UnitPrice: number;
-// }
+// Define interfaces for your data structure
+interface ProductData {
+    CategoryID: number;
+    ProductName: string;
+    Description: string | null;
+    SupplierID: number | null;
+    Quantity: number | null;
+    UnitPrice: number;
+}
 
-// interface ChangedFields {
-//     [key: string]: any;
-//     ProductID: string | number;
-// }
+interface ChangedFields {
+    [key: string]: any;
+    ProductID: string | number;
+}
 
 // GET Method (All)
 export const get = async (req: Request, res: Response) => {
@@ -133,8 +134,96 @@ export const remove = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
+// PUT Method - Update Product
+export const update = async (req: Request, res: Response): Promise<any> => {
+    try {
+        // Check if ID exists
+        const id = req.query.id as string;
+        if (!id) {
+            return res.status(400).json({
+                message: "Product UID is required."
+            });
+        }
+
+        const {
+            CategoryID,
+            ProductName,
+            Description,
+            SupplierID,
+            Quantity,
+            UnitPrice
+        } = req.body;
+
+        const updateData = { CategoryID, ProductName, Description, SupplierID, Quantity, UnitPrice };
+
+        const [originalProduct] = await db.sequelize.query<ProductData[]>(
+            'SELECT * FROM Products WHERE ProductID = :id',
+            {
+                replacements: { id },
+                type: QueryTypes.SELECT
+            }
+        );
+
+        if (!originalProduct) {
+            return res.status(404).json({ message: "Product not found." });
+        }
+
+        const [updated] = await db.sequelize.query(
+            `UPDATE Products
+                SET CategoryID = :CategoryID,
+                    ProductName = :ProductName,
+                    Description = :Description,
+                    SupplierID = :SupplierID,
+                    Quantity = :Quantity,
+                    UnitPrice = :UnitPrice,
+                    Date_Modified = GETDATE()
+                WHERE ProductID = :ProductID`,
+            {
+                replacements: {
+                    ...updateData,
+                    ProductID: id
+                },
+                type: QueryTypes.UPDATE
+            }
+        );
+
+        if (updated) {
+            const [updatedProduct] = await db.sequelize.query<ProductData[]>(
+                'SELECT * FROM Products WHERE ProductID = :id',
+                {
+                    replacements: { id },
+                    type: QueryTypes.SELECT
+                }
+            );
+
+            const changedFields: ChangedFields = { ProductID: id };
+            const ignoredFields = ['Date_Added'];
+            for (const key in updatedProduct[0]) {
+                if (
+                    key in originalProduct &&
+                    (updatedProduct[0] as any)[key] !== (originalProduct as any)[key] &&
+                    !ignoredFields.includes(key)
+                ) {
+                    changedFields[key] = updatedProduct[0][key as keyof ProductData];
+                }
+            }
+
+            return res.status(200).json({
+                message: "Product updated successfully.",
+                updated: changedFields
+            });
+        } else {
+            return res.status(404).json({ message: "Product not found." });
+        }
+    } catch (error) {
+        console.error("Error updating product:", error);
+        return res.status(500).json({ message: "Error updating product." });
+    }
+};
+
+
 export const productService = {
-    get, post, getDetails, remove
+    get, post, getDetails, remove, update
 }
 
 export default productService;
