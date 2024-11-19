@@ -8,7 +8,8 @@ export default (sequelize: Sequelize) => {
     CategoryID: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: true // Auto generate by trigger in SQL Server
+      allowNull: true, // Auto generate by trigger in SQL Server
+      autoIncrement: true,
     },
     CategoryName: {
       type: DataTypes.STRING(20),

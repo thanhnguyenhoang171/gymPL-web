@@ -9,6 +9,7 @@ import customerRoutes from "./routes/customer.routes";
 import packageRoutes from "./routes/package.routes";
 import accountRoutes from "./routes/account.routes";
 import authRoutes from "./routes/auth.routes";
+import categoryRoutes from "./routes/category.routes";
 import protectedRoutes from "./routes/protected.routes";
 import DbConnect from "./data/db_sqlserver_connection";
 import fileUpload from 'express-fileupload'
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API base path to customers
 app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/package", packageRoutes);
 app.use("/api/account", accountRoutes);
