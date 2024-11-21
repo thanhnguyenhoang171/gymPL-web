@@ -15,8 +15,7 @@ interface ProductData {
 }
 
 interface ChangedFields {
-    [key: string]: any;
-    ProductID: string | number;
+    [key: string]: { dataUpdated: any };
 }
 
 // GET Method (All)
@@ -137,87 +136,79 @@ export const remove = async (req: Request, res: Response): Promise<any> => {
 // PUT Method - Update Product
 export const update = async (req: Request, res: Response): Promise<any> => {
     try {
-        // Check if ID exists
         const id = req.query.id as string;
         if (!id) {
-            return res.status(400).json({
-                message: "Product UID is required."
-            });
+            return res.status(400).json({ message: 'Supplier UID is required.' });
         }
 
-        const {
-            CategoryID,
-            ProductName,
-            Description,
-            SupplierID,
-            Quantity,
-            UnitPrice
-        } = req.body;
+        const { CategoryID, ProductName, Description, SupplierID, Quantity, UnitPrice } =
+            req.body;
 
-        const updateData = { CategoryID, ProductName, Description, SupplierID, Quantity, UnitPrice };
+        if (!CategoryID || !ProductName) {
+            return res.status(400).json({ message: 'CategoryID or ProductName is required.' });
+        }
 
-        const [originalProduct] = await db.sequelize.query<ProductData[]>(
-            'SELECT * FROM Products WHERE ProductID = :id',
-            {
-                replacements: { id },
-                type: QueryTypes.SELECT
-            }
-        );
-
+        const originalProduct = await db.Products.findByPk(id);
         if (!originalProduct) {
-            return res.status(404).json({ message: "Product not found." });
+            return res.status(404).json({ message: 'Product not found.' });
         }
 
-        const [updated] = await db.sequelize.query(
-            `UPDATE Products
-                SET CategoryID = :CategoryID,
-                    ProductName = :ProductName,
-                    Description = :Description,
-                    SupplierID = :SupplierID,
-                    Quantity = :Quantity,
-                    UnitPrice = :UnitPrice,
-                    Date_Modified = GETDATE()
-                WHERE ProductID = :ProductID`,
-            {
-                replacements: {
-                    ...updateData,
-                    ProductID: id
-                },
-                type: QueryTypes.UPDATE
-            }
-        );
+        const updateData: Partial<ProductData> = {};
+        const changedFields: ChangedFields = {};
 
-        if (updated) {
-            const [updatedProduct] = await db.sequelize.query<ProductData[]>(
-                'SELECT * FROM Products WHERE ProductID = :id',
+        if (Number(CategoryID) !== originalProduct.CategoryID) {
+            updateData.CategoryID = CategoryID;
+            changedFields.CategoryID = { dataUpdated: CategoryID };
+        }
+        if (ProductName !== originalProduct.ProductName) {
+            updateData.ProductName = ProductName;
+            changedFields.ProductName = { dataUpdated: ProductName };
+        }
+        if (Description !== originalProduct.Description) {
+            updateData.Description = Description;
+            changedFields.Description = { dataUpdated: Description };
+        }
+        if (SupplierID !== originalProduct.SupplierID) {
+            updateData.SupplierID = SupplierID;
+            changedFields.SupplierID = { dataUpdated: SupplierID };
+        }
+        if (Number(Quantity) !== originalProduct.Quantity) {
+            updateData.Quantity = Quantity;
+            changedFields.Quantity = { dataUpdated: Quantity };
+        }
+        if (Number(UnitPrice) !== originalProduct.UnitPrice) {
+            updateData.UnitPrice = UnitPrice;
+            changedFields.UnitPrice = { dataUpdated: UnitPrice };
+        }
+
+        if (Object.keys(updateData).length > 0) {
+            await db.sequelize.query(
+                `UPDATE Products
+     SET 
+     ${Object.keys(updateData)
+                    .map((field) => `${field} = :${field}`)
+                    .join(', ')},
+     Date_Modified = GETDATE()
+     WHERE ProductID = :ProductID`,
                 {
-                    replacements: { id },
-                    type: QueryTypes.SELECT
+                    replacements: {
+                        ...updateData,
+                        ProductID: id,
+                    },
+                    type: QueryTypes.UPDATE,
                 }
             );
 
-            const changedFields: ChangedFields = { ProductID: id };
-            const ignoredFields = ['Date_Added'];
-            for (const key in updatedProduct[0]) {
-                if (
-                    key in originalProduct &&
-                    (updatedProduct[0] as any)[key] !== (originalProduct as any)[key] &&
-                    !ignoredFields.includes(key)
-                ) {
-                    changedFields[key] = updatedProduct[0][key as keyof ProductData];
-                }
-            }
-
             return res.status(200).json({
-                message: "Product updated successfully.",
-                updated: changedFields
+                message: 'Product updated successfully.',
+                updatedFields: changedFields,
             });
         } else {
-            return res.status(404).json({ message: "Product not found." });
+            return res.status(200).json({ message: 'No changes detected.' });
         }
     } catch (error) {
-        console.error("Error updating product:", error);
-        return res.status(500).json({ message: "Error updating product." });
+        console.error('Error updating product:', error);
+        res.status(500).json({ message: 'Error updating product.' });
     }
 };
 

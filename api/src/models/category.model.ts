@@ -14,7 +14,15 @@ export default (sequelize: Sequelize) => {
     CategoryName: {
       type: DataTypes.STRING(20),
       allowNull: true,
-    }
+    },
+    Date_Added: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    Date_Modified: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   }, {
     tableName: "Categories",
     timestamps: false,

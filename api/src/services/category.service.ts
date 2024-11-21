@@ -2,6 +2,14 @@ import db from "../data/mssql";
 import { query, Request, Response } from 'express';
 import { QueryTypes } from 'sequelize';
 
+interface CategoriesData {
+    CategoryName: string;
+}
+
+interface ChangedFields {
+    [key: string]: { dataUpdated: any };
+}
+
 // GET Method (get all categories)
 export const getAll = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -52,23 +60,36 @@ export const getCategoryById = async (req: Request, res: Response): Promise<any>
 export const postCategory = async (req: Request, res: Response): Promise<any> => {
     try {
         const { CategoryName } = req.body;
+
         if (!CategoryName) {
             return res.status(400).json({
-                message: "Please provide a category name!"
-            })
+                message: "Please provide a category name!",
+            });
         }
-        const result = await db.Categories.create({ CategoryName });
+
+        const result = await db.sequelize.query(
+            `INSERT INTO Categories (CategoryName) VALUES (:CategoryName)`,
+            {
+                replacements: { CategoryName },
+                type: QueryTypes.INSERT,
+            }
+        );
+        const createdCategory = await db.Categories.findOne({
+            where: { CategoryName },
+            order: [['Date_Added', 'DESC']],
+        });
         return res.status(201).json({
             message: "Add a category successfully!",
-            data: result
+            data: createdCategory,
         });
     } catch (error) {
         console.error("Error insert a category: ", error);
         return res.status(500).json({
-            message: "Error insert new category",
-        })
+            message: "Error inserting new category",
+        });
     }
-}
+};
+
 
 // DELETE Method
 export const remove = async (req: Request, res: Response): Promise<any> => {
@@ -102,27 +123,58 @@ export const putCategory = async (req: Request, res: Response): Promise<any> => 
     try {
         const id = req.query.id as string;
         if (!id) {
-            return res.status(400).json({
-                message: "CategoryID is required"
-            });
+            return res.status(400).json({ message: 'Category UID is required.' });
         }
-        const category = await db.Categories.findOne({ where: { CategoryID: id } });
-        if (!category) {
-            return res.status(404).json({
-                message: "Category not found!"
-            });
+
+        const { CategoryName} =
+            req.body;
+
+        if (!CategoryName) {
+            return res.status(400).json({ message: 'CategoryName is required.' });
         }
-        const { CategoryName } = req.body;
-        const result = await db.Categories.update({ CategoryName: CategoryName }, { where: { CategoryID: id } });
-        return res.status(200).json({
-            message: "Update a category successfully!",
-            result: result
-        })
+
+        const originalCategory = await db.Categories.findByPk(id);
+        if (!originalCategory) {
+            return res.status(404).json({ message: 'Category not found.' });
+        }
+
+        const updateData: Partial<CategoriesData> = {};
+        const changedFields: ChangedFields = {};
+
+        if (CategoryName !== originalCategory.CategoryName) {
+            updateData.CategoryName = CategoryName;
+            changedFields.CategoryName = { dataUpdated: CategoryName };
+        }
+       
+
+        if (Object.keys(updateData).length > 0) {
+            await db.sequelize.query(
+                `UPDATE Categories
+     SET 
+     ${Object.keys(updateData)
+                    .map((field) => `${field} = :${field}`)
+                    .join(', ')},
+     Date_Modified = GETDATE()
+     WHERE CategoryID = :CategoryID`,
+                {
+                    replacements: {
+                        ...updateData,
+                        CategoryID: id,
+                    },
+                    type: QueryTypes.UPDATE,
+                }
+            );
+
+            return res.status(200).json({
+                message: 'Category updated successfully.',
+                updatedFields: changedFields,
+            });
+        } else {
+            return res.status(200).json({ message: 'No changes detected.' });
+        }
     } catch (error) {
-        console.error("Error updating category: ", error);
-        return res.status(500).json({
-            message:"Error updating category!"
-        })
+        console.error('Error updating category:', error);
+        res.status(500).json({ message: 'Error updating category.' });
     }
 }
 export const categoryService = {
